@@ -79,25 +79,25 @@ class Train
   def go(new_route)
     self.route = new_route
     self.station_index = 0
-    route.station_list[station_index].add_train(self)
+    self.current_station.add_train(self)
   end
 
   def go_ahead
     return nil unless station_index != route.station_list.size - 1
-    route.station_list[station_index].delete_train(self)
+    self.current_station.delete_train(self)
+    self.next_station.add_train(self)
     self.station_index +=1
-    route.station_list[station_index].add_train(self)
   end
 
   def go_back
     return nil unless station_index != 0
-    route.station_list[station_index].delete_train(self)
+    self.current_station.delete_train(self)
+    self.previous_station.add_train(self)
     self.station_index -= 1
-    route.station_list[station_index].add_train(self)
   end
 
   def next_station
-    route.station_list[station_index + 1] if station_index = route.station_list.size - 1
+    route.station_list[station_index + 1] if station_index != route.station_list.size - 1
   end
 
   def current_station
