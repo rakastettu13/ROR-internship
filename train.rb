@@ -1,14 +1,30 @@
 # frozen_string_literal: true
 
 class Train
+  include CompanyName
+  include InstanceCounter
+
   attr_accessor :speed
   attr_reader :type, :number, :route, :railcar_list
+
+  @@all = []
+
+  def self.all
+    @@all
+  end
+
+  def self.find(number)
+    @@all.each { |train| return train if train.number == number }
+    nil
+  end
 
   def initialize(number)
     @number = number
     @type = initial_type
     @railcar_list = []
     @speed = 0
+    @@all.push(self)
+    register_instance
   end
 
   def stop
