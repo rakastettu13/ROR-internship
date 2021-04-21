@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Railcar
+  include CompanyName
+
   attr_reader :type
 
   def initialize

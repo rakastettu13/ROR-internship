@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class MainMenu
+  include Menu1
+  include Menu2
+  include Menu3
+  include Menu4
+
   attr_accessor :train_list, :station_list, :route_list
 
   def initialize
@@ -8,11 +13,6 @@ class MainMenu
     @station_list = []
     @route_list = []
   end
-
-  include Menu1
-  include Menu2
-  include Menu3
-  include Menu4
 
   def start
     loop do
