@@ -7,6 +7,8 @@ class Train
   attr_accessor :speed
   attr_reader :type, :number, :route, :railcar_list
 
+  NUMBER_FORMAT = /^[a-zA-z\d]{3}-?[a-zA-z\d]{2}$/.freeze
+
   @@all = []
 
   def self.all
@@ -20,9 +22,10 @@ class Train
 
   def initialize(number)
     @number = number
+    @speed = 0
+    validate!
     @type = initial_type
     @railcar_list = []
-    @speed = 0
     @@all.push(self)
     register_instance
   end
@@ -73,11 +76,26 @@ class Train
     route.station_list[station_index - 1] if station_index != 0
   end
 
+  def valid?
+    validate!
+    true
+  rescue RuntimeError
+    false
+  end
+
   protected
 
-  # следующие переменные (методы) не должен изменять (использовать) пользователь
   attr_accessor :station_index
   attr_writer :route, :ralcar_list
 
-  def initial_type; end
+  def initial_type
+    'no type'
+  end
+
+  def validate!
+    raise "Number can't be nil" if number.nil?
+    raise 'Number has invalid format' if number !~ NUMBER_FORMAT
+    raise "Speed can't be nil" if speed.nil?
+    raise 'Speed ​​must be greater than or equal to 0' if speed.negative?
+  end
 end

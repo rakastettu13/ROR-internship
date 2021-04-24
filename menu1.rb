@@ -23,9 +23,16 @@ module Menu1
 
   def create_train(str)
     puts 'Для создания поезда введите его номер'
-    number = gets.chomp
-    train_list.push(TrainCargo.new(number)) if str == 'cargo'
-    train_list.push(TrainPassenger.new(number)) if str == 'passenger'
+    begin
+      puts "Допустимый формат: ***-**, где '*' - буква или число; дефис необязателен "
+      number = gets.chomp
+      train_list.push(t = TrainCargo.new(number)) if str == 'cargo'
+      train_list.push(t = TrainPassenger.new(number)) if str == 'passenger'
+      puts "Создан поезд #{t.number}"
+    rescue RuntimeError
+      puts 'Недопустимый формат номера'
+      retry
+    end
   end
 
   def create_station

@@ -12,6 +12,7 @@ class Station
 
   def initialize(name)
     @name = name
+    validate!
     @train_list = []
     @@all.push(self)
     register_instance
@@ -38,8 +39,19 @@ class Station
     { passenger: passenger, cargo: cargo }
   end
 
+  def valid?
+    validate!
+    true
+  rescue RuntimeError
+    false
+  end
+
   private
 
-  # эту переменную не должен изменять пользователь
   attr_writer :train_list
+
+  def validate!
+    raise "Name can't be nil" if name.nil?
+    raise 'Name should be at least 1 symbol' if name.empty?
+  end
 end
