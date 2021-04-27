@@ -8,14 +8,15 @@ class Route
   def initialize(first, last)
     @station_list = [first, last]
     @name = "#{first.name} -- #{last.name}"
+    self.class.all.push(self)
     register_instance
   end
 
-  def add_station(new)
+  def add(new)
     station_list.insert(station_list.size - 1, new)
   end
 
-  def delete_station(waste)
-    station_list.delete(waste)
+  def delete(station)
+    station_list.delete(station)
   end
 end
