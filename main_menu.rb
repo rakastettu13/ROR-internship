@@ -4,29 +4,18 @@ class MainMenu
   include Menu1
   include Menu2
   include Menu3
-  include Menu4
-
-  attr_accessor :train_list, :station_list, :route_list
-
-  def initialize
-    @train_list = []
-    @station_list = []
-    @route_list = []
-  end
 
   def start
     loop do
-      puts 'Введите 1 для создания поезда, станции или маршрута'
+      puts 'Введите 1 для создания вагона, поезда, станции или маршрута'
       puts 'Введите 2 для получения информации о созданных объектах'
-      puts 'Введите 3 для управления поездами'
-      puts 'Введите 4 для управления маршрутами'
+      puts 'Введите 3 для управления созданными объектами'
       puts 'Введите stop для завершения работы'
       case gets.chomp
       when 'stop' then exit
       when '1' then menu1
       when '2' then menu2
       when '3' then menu3
-      when '4' then menu4
       else puts 'Попробуйте снова'
       end
     end
@@ -41,15 +30,26 @@ class MainMenu
   end
 
   def list(class_name)
-    return station_list if class_name == 'station'
-    return train_list if class_name == 'train'
-    return route_list if class_name == 'route'
+    return Station.all if class_name == 'station'
+    return Train.all_types if class_name == 'train'
+    return Route.all if class_name == 'route'
+    return Railcar.all_types if class_name == 'railcar'
   end
 
   def print_list(class_name)
-    (0...list(class_name).size).each do |i|
-      puts "Введите #{i}, чтобы выбрать #{list(class_name)[i].name}" if %w[station route].include?(class_name)
-      puts "Введите #{i}, чтобы выбрать #{list(class_name)[i].number}" if class_name == 'train'
+    case class_name
+    when 'train'
+      elements(class_name) { |train, index| puts "Введите #{index}, чтобы выбрать #{train.number}" }
+    when 'railcar'
+      elements(class_name) do |railcar, index|
+        puts "Введите #{index}, чтобы выбрать вагон типа #{railcar.type} вместимостью #{railcar.space}"
+      end
+    when 'station', 'route'
+      elements(class_name) { |element, index| puts "Введите #{index}, чтобы выбрать #{element.name}" }
     end
+  end
+
+  def elements(class_name, &block)
+    list(class_name).each_with_index { |element, index| block.call(element, index) }
   end
 end

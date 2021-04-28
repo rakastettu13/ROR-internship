@@ -5,24 +5,19 @@ class Station
 
   attr_reader :name, :train_list
 
-  @@all = []
-  def self.all
-    @@all
-  end
-
   def initialize(name)
     @name = name
     validate!
     @train_list = []
-    @@all.push(self)
+    self.class.all.push(self)
     register_instance
   end
 
-  def add_train(train)
+  def add(train)
     train_list.push(train)
   end
 
-  def delete_train(train)
+  def delete(train)
     train_list.delete(train)
   end
 
@@ -37,6 +32,10 @@ class Station
       end
     end
     { passenger: passenger, cargo: cargo }
+  end
+
+  def trains(&block)
+    train_list.each { |train| block.call(train) }
   end
 
   def valid?

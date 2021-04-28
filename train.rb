@@ -9,14 +9,14 @@ class Train
 
   NUMBER_FORMAT = /^[a-zA-z\d]{3}-?[a-zA-z\d]{2}$/.freeze
 
-  @@all = []
+  @@all_types = []
 
-  def self.all
-    @@all
+  def self.all_types
+    @@all_types
   end
 
   def self.find(number)
-    @@all.each { |train| return train if train.number == number }
+    @@all_types.each { |train| return train if train.number == number }
     nil
   end
 
@@ -26,7 +26,8 @@ class Train
     validate!
     @type = initial_type
     @railcar_list = []
-    @@all.push(self)
+    @@all_types.push(self)
+    self.class.all.push(self)
     register_instance
   end
 
@@ -34,33 +35,33 @@ class Train
     self.speed = 0
   end
 
-  def add_railcar(railcar)
+  def add(railcar)
     railcar_list.push(railcar) if speed.zero? && (type == railcar.type)
   end
 
-  def delete_railcar(railcar)
+  def delete(railcar)
     railcar_list.delete(railcar) if speed.zero?
   end
 
   def go(new_route)
     self.route = new_route
     self.station_index = 0
-    current_station.add_train(self)
+    current_station.add(self)
   end
 
   def go_ahead
     return nil unless station_index != route.station_list.size - 1
 
-    current_station.delete_train(self)
-    next_station.add_train(self)
+    current_station.delete(self)
+    next_station.add(self)
     self.station_index += 1
   end
 
   def go_back
     return nil unless station_index != 0
 
-    current_station.delete_train(self)
-    previous_station.add_train(self)
+    current_station.delete(self)
+    previous_station.add(self)
     self.station_index -= 1
   end
 
@@ -74,6 +75,10 @@ class Train
 
   def previous_station
     route.station_list[station_index - 1] if station_index != 0
+  end
+
+  def railcars(&block)
+    railcar_list.each_with_index { |railcar, index| block.call(railcar, index) }
   end
 
   def valid?

@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 module Menu1
+  include Menu1a
+  include Menu1b
+
   def menu1
     loop do
-      puts 'Введите 1 для создания пассажирского поезда'
-      puts 'Введите 2 для создания грузового поезда'
+      puts 'Введите 1 для создания поезда'
+      puts 'Введите 2 для создания вагона'
       puts 'Введите 3 для создания станции'
       puts 'Введите 4 для создания маршрута'
       puts 'Введите 0 для возврата к преддыдущему меню'
@@ -12,8 +15,8 @@ module Menu1
       case gets.chomp
       when 'stop' then exit
       when '0' then break
-      when '1' then create_train('passenger')
-      when '2' then create_train('cargo')
+      when '1' then menu1a
+      when '2' then menu1b
       when '3' then create_station
       when '4' then create_route
       else puts 'Попробуйте снова'
@@ -21,24 +24,10 @@ module Menu1
     end
   end
 
-  def create_train(str)
-    puts 'Для создания поезда введите его номер'
-    begin
-      puts "Допустимый формат: ***-**, где '*' - буква или число; дефис необязателен "
-      number = gets.chomp
-      train_list.push(t = TrainCargo.new(number)) if str == 'cargo'
-      train_list.push(t = TrainPassenger.new(number)) if str == 'passenger'
-      puts "Создан поезд #{t.number}"
-    rescue RuntimeError
-      puts 'Недопустимый формат номера'
-      retry
-    end
-  end
-
   def create_station
     puts 'Для создания станции введите ее название'
     name = gets.chomp
-    station_list.push(Station.new(name))
+    Station.new(name)
   end
 
   def create_route
@@ -47,6 +36,6 @@ module Menu1
     first_index = gets.to_i
     puts 'Выберите конечную станцию'
     last_index = gets.to_i
-    route_list.push(Route.new(station_list[first_index], station_list[last_index]))
+    Route.new(Station.all[first_index], Station.all[last_index])
   end
 end
