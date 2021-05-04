@@ -17,17 +17,21 @@ module Menu2
       else puts 'Попробуйте снова'
       end
     end
+  rescue RuntimeError
+    puts 'Нет доступных элементов. Перейдите в меню создания.'
+  rescue NoMethodError
+    puts 'Индекс введен неверно. Попробуйте снова.'
   end
 
   def route_station_list
     route = choose('route')
-    puts 'Список станций:'
+    puts 'Список станций:' if route
     route.station_list.each { |station| puts station.name }
   end
 
   def station_train_list
     station = choose('station')
-    puts 'Список поездов (номер, тип, количество вагонов):'
+    puts 'Список поездов (номер, тип, количество вагонов):' if station
     station.trains { |train| puts "#{train.number} \t #{train.type} \t #{train.railcar_list.size}" }
   end
 

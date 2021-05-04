@@ -2,26 +2,41 @@
 
 module Menu3a
   def menu3a
+    railcar = choose('railcar')
+    validate!(railcar)
     loop do
       puts 'Введите 1, чтобы занять место/объем в вагоне'
       puts 'Введите 0 для возврата к преддыдущему меню'
       case gets.chomp
       when '0' then break
-      when '1' then take_up_space
+      when '1' then take_up_space(railcar)
       else puts 'Попробуйте снова'
       end
     end
+  rescue RuntimeError
+    puts 'Индекс введен неверно. Попробуйте снова.'
   end
 
-  def take_up_space
-    railcar = choose('railcar')
+  def take_up_space(railcar)
     case railcar.type
-    when 'cargo'
-      puts "Свободный объем: #{railcar.free}. Введите величину объема, который необходимо занять"
-      volume = gets.chomp
-      railcar.occupy(volume.to_f)
-    when 'passenger'
-      railcar.occupy
+    when 'cargo' then cargo(railcar)
+    when 'passenger' then passenger(railcar)
     end
+  end
+
+  def cargo(railcar)
+    puts "Свободный объем: #{railcar.free}. Введите величину объема, который необходимо занять"
+    volume = gets.chomp
+    railcar.occupy(volume.to_f)
+    puts "Объем занят. Свободный объем #{railcar.free}"
+  rescue RuntimeError
+    puts 'Не удалось занять объем. Весь объем занят или введено некорректное значение.'
+  end
+
+  def passenger(railcar)
+    railcar.occupy
+    puts "Место занято. Свободных мест #{railcar.free}"
+  rescue RuntimeError
+    puts 'Не удалось занять место. Свободных мест нет'
   end
 end

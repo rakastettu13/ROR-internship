@@ -27,15 +27,19 @@ module Menu1
   def create_station
     puts 'Для создания станции введите ее название'
     name = gets.chomp
-    Station.new(name)
+    s = Station.new(name)
+    puts "Создана станция #{s.name}"
   end
 
   def create_route
-    print_list('station')
-    puts 'Выберите начальную станцию'
-    first_index = gets.to_i
-    puts 'Выберите конечную станцию'
-    last_index = gets.to_i
-    Route.new(Station.all[first_index], Station.all[last_index])
+    first = choose('station', messege: 'Выберите начальную станцию')
+    last = choose('station', messege: 'Выберите конечную станцию')
+
+    r = Route.new(first, last)
+    puts "Создан маршрут #{r.name}"
+  rescue TypeError
+    puts 'Индексы введены неверно. Попробуйте снова.'
+  rescue RuntimeError
+    puts 'Для создания маршрута нужны по крайней мере две станции. Перейдите в меню создания.'
   end
 end

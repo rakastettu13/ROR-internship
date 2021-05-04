@@ -21,5 +21,7 @@ module Menu3
       else puts 'Попробуйте снова'
       end
     end
+  rescue RuntimeError
+    puts 'Нет доступных элементов. Перейдите в меню создания.'
   end
 end
