@@ -6,11 +6,12 @@ class Station
 
   attr_reader :name, :train_list
 
-  NAME_FORMAT = //.freeze
+  validate('type', :name, String)
+  validate('presence', :name)
 
   def initialize(name)
-    validate!(name, regexp: NAME_FORMAT)
     @name = name
+    validate!
     @train_list = []
     self.class.all.push(self)
     register_instance

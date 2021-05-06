@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RailcarCargo < Railcar
+  validate('non_negativity', :space)
   def volume
     space
   end

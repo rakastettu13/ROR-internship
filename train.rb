@@ -9,6 +9,9 @@ class Train
 
   NUMBER_FORMAT = /^[a-zA-z\d]{3}-?[a-zA-z\d]{2}$/.freeze
 
+  validate('format', :number, NUMBER_FORMAT)
+  validate('non_negativity', :speed)
+
   @@all_types = []
 
   def self.all_types
@@ -21,9 +24,9 @@ class Train
   end
 
   def initialize(number)
-    self.class.validate(number, 'format', regexp: NUMBER_FORMAT)
     @number = number
     @speed = 0
+    validate!
     @type = initial_type
     @railcar_list = []
     @@all_types.push(self)
@@ -32,8 +35,8 @@ class Train
   end
 
   def speed=(value)
-    self.class.validate(value, 'non_negativity', attr_type: 'speed')
     @speed = value
+    validate!
   end
 
   def stop
