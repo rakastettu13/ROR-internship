@@ -27,16 +27,18 @@ module Menu3a
   def cargo(railcar)
     puts "Свободный объем: #{railcar.free}. Введите величину объема, который необходимо занять"
     volume = gets.chomp
-    railcar.occupy(volume.to_f)
-    puts "Объем занят. Свободный объем #{railcar.free}"
-  rescue RuntimeError
-    puts 'Не удалось занять объем. Весь объем занят или введено некорректное значение.'
+    if railcar.occupy(volume.to_f)
+      puts "Объем занят. Свободный объем #{railcar.free}"
+    else
+      puts 'Не удалось занять объем. Весь объем занят или введено некорректное значение.'
+    end
   end
 
   def passenger(railcar)
-    railcar.occupy
-    puts "Место занято. Свободных мест #{railcar.free}"
-  rescue RuntimeError
-    puts 'Не удалось занять место. Свободных мест нет'
+    if railcar.occupy
+      puts "Место занято. Свободных мест #{railcar.free}"
+    else
+      puts 'Не удалось занять место. Свободных мест нет'
+    end
   end
 end

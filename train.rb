@@ -9,8 +9,8 @@ class Train
 
   NUMBER_FORMAT = /^[a-zA-z\d]{3}-?[a-zA-z\d]{2}$/.freeze
 
-  validate('format', :number, NUMBER_FORMAT)
-  validate('non_negativity', :speed)
+  validate(:format, :@number, NUMBER_FORMAT)
+  validate(:non_negativity, :@speed)
 
   @@all_types = []
 

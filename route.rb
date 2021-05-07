@@ -7,8 +7,8 @@ class Route
   attr_reader :station_list, :name
   attr_accessor :first, :last
 
-  validate('type', :first, Station)
-  validate('type', :last, Station)
+  validate(:type, :@first, Station)
+  validate(:type, :@last, Station)
   def initialize(first, last)
     @first = first
     @last = last

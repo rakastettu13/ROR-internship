@@ -7,7 +7,7 @@ class Railcar
 
   attr_reader :type, :occupied, :space
 
-  validate('non_negativity', :space)
+  validate(:non_negativity, :@space)
   @@all_types = []
 
   def self.all_types
@@ -34,7 +34,6 @@ class Railcar
   def initial_type;  end
 
   def occupy_space(value)
-    @occupied += value
-    validate!
+    @occupied += value if (occupied + value) <= space && value >= 0
   end
 end
