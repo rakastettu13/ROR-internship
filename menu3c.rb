@@ -3,6 +3,7 @@
 module Menu3c
   def menu3c
     route = choose('route')
+    validate!(route)
     loop do
       puts 'Введите 1 для добавления станции в маршрут'
       puts 'Введите 2 для удаления станции из маршрута'
@@ -14,5 +15,7 @@ module Menu3c
       else puts 'Попробуйте снова'
       end
     end
+  rescue RuntimeError
+    puts 'Индекс введен неверно. Попробуйте снова.'
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RailcarPassenger < Railcar
+  validate(:non_negativity, :@space)
   def seats
     space
   end

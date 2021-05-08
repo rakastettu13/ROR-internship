@@ -3,11 +3,14 @@
 class Train
   include CompanyName
   include InstanceCounter
+  include Validation
 
-  attr_accessor :speed
-  attr_reader :type, :number, :route, :railcar_list
+  attr_reader :type, :number, :route, :railcar_list, :speed
 
   NUMBER_FORMAT = /^[a-zA-z\d]{3}-?[a-zA-z\d]{2}$/.freeze
+
+  validate(:format, :@number, NUMBER_FORMAT)
+  validate(:non_negativity, :@speed)
 
   @@all_types = []
 
@@ -29,6 +32,11 @@ class Train
     @@all_types.push(self)
     self.class.all.push(self)
     register_instance
+  end
+
+  def speed=(value)
+    @speed = value
+    validate!
   end
 
   def stop
@@ -81,26 +89,10 @@ class Train
     railcar_list.each_with_index { |railcar, index| block.call(railcar, index) }
   end
 
-  def valid?
-    validate!
-    true
-  rescue RuntimeError
-    false
-  end
-
   protected
 
   attr_accessor :station_index
   attr_writer :route, :ralcar_list
 
-  def initial_type
-    'no type'
-  end
-
-  def validate!
-    raise "Number can't be nil" if number.nil?
-    raise 'Number has invalid format' if number !~ NUMBER_FORMAT
-    raise "Speed can't be nil" if speed.nil?
-    raise 'Speed ​​must be greater than or equal to 0' if speed.negative?
-  end
+  def initial_type; end
 end

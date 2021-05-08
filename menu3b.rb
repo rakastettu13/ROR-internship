@@ -3,6 +3,8 @@
 module Menu3b
   def menu3b
     train = choose('train')
+    validate!(train)
+
     loop do
       puts 'Введите 1 для назначения маршрута'
       puts 'Введите 2 для добавления вагона'
@@ -20,35 +22,48 @@ module Menu3b
       else puts 'Попробуйте снова'
       end
     end
+  rescue RuntimeError, NoMethodError
+    puts 'Неверно введен индекс. Попробуйте снова'
   end
 
   def go_on_route(train)
     route = choose('route')
     train.go(route)
+    puts "Поезду #{train.number} Назначен маршрут #{route.name}"
+  rescue RuntimeError
+    puts 'Нет доступных маршрутов. Перейдите в меню создания.'
   end
 
   def go_on_station(train, index)
-    train.go_ahead if index == '4'
-    train.go_back if index == '5'
+    go = train.go_ahead if index == '4'
+    go = train.go_back if index == '5'
+    puts 'Перемещение удалось' if go
+    puts 'Перемещение не удалось' unless go
+  rescue NoMethodError
+    puts 'Движение невозможно. Назначьте поезду маршрут.'
   end
 
   def add_railcar(train)
     case train.type
-    when 'cargo' then current_class = RailcarCargo
-    when 'passenger' then current_class = RailcarPassenger
+    when 'cargo' then railcar = choose('railcar_cargo')
+    when 'passenger' then railcar = choose('railcar_passenger')
     end
-    current_class.all.each_with_index do |railcar, index|
-      puts "Введите #{index}, чтобы выбрать вагон вместимостью #{railcar.space}"
-    end
-    index = gets.to_i
-    train.add(current_class.all[index])
+    train.add(railcar)
+    puts 'Вагон добавлен'
+  rescue RuntimeError
+    puts 'Нет доступных вагонов. Перейдите в меню создания.'
   end
 
   def delete_railcar(train)
-    train.railcars do |railcar, index|
-      puts "Введите #{index}, чтобы удалить вагон вместимостью #{railcar.space}"
+    if train.railcar_list.size.zero?
+      puts 'Нет вагонов для удаления'
+    else
+      train.railcars do |railcar, index|
+        puts "Введите #{index}, чтобы удалить вагон вместимостью #{railcar.space}"
+      end
+      index = gets.to_i
+      train.delete(train.railcar_list[index])
+      puts 'Вагон удален'
     end
-    index = gets.to_i
-    train.delete(train.railcar_list[index])
   end
 end

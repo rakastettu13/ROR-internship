@@ -19,15 +19,12 @@ module Menu1a
 
   def create_train(str)
     puts 'Для создания поезда введите его номер'
-    begin
-      puts "Допустимый формат: ***-**, где '*' - буква или число; дефис необязателен "
-      number = gets.chomp
-      t = TrainCargo.new(number) if str == 'cargo'
-      t = TrainPassenger.new(number) if str == 'passenger'
-      puts "Создан поезд №#{t.number}"
-    rescue RuntimeError
-      puts 'Недопустимый формат номера'
-      retry
-    end
+    puts "Допустимый формат: ***-**, где '*' - буква или число; дефис необязателен "
+    number = gets.chomp
+    t = TrainCargo.new(number) if str == 'cargo'
+    t = TrainPassenger.new(number) if str == 'passenger'
+    puts "Создан поезд №#{t.number}"
+  rescue RuntimeError
+    puts 'Недопустимый формат номера'
   end
 end

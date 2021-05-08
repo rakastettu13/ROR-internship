@@ -23,7 +23,10 @@ class MainMenu
 
   private
 
-  def choose(class_name)
+  def choose(class_name, messege: nil)
+    raise 'No elements' if list(class_name).size.zero?
+
+    puts messege
     print_list(class_name)
     index = gets.to_i
     list(class_name)[index]
@@ -34,13 +37,15 @@ class MainMenu
     return Train.all_types if class_name == 'train'
     return Route.all if class_name == 'route'
     return Railcar.all_types if class_name == 'railcar'
+    return RailcarCargo.all if class_name == 'railcar_cargo'
+    return RailcarPassenger.all if class_name == 'railcar_passenger'
   end
 
   def print_list(class_name)
     case class_name
     when 'train'
       elements(class_name) { |train, index| puts "Введите #{index}, чтобы выбрать #{train.number}" }
-    when 'railcar'
+    when 'railcar', 'railcar_cargo', 'railcar_passenger'
       elements(class_name) do |railcar, index|
         puts "Введите #{index}, чтобы выбрать вагон типа #{railcar.type} вместимостью #{railcar.space}"
       end
@@ -51,5 +56,9 @@ class MainMenu
 
   def elements(class_name, &block)
     list(class_name).each_with_index { |element, index| block.call(element, index) }
+  end
+
+  def validate!(value)
+    raise 'Value is nil' unless value
   end
 end

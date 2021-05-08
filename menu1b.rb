@@ -22,11 +22,14 @@ module Menu1b
     when 'cargo'
       puts 'Для создания грузового вагона введите его объем'
       volume = gets.chomp
-      RailcarCargo.new(volume.to_f)
+      r = RailcarCargo.new(volume.to_f)
     when 'passenger'
       puts 'Для создания пассажирского вагона введите количество мест'
       seats = gets.chomp
-      RailcarPassenger.new(seats.to_i)
+      r = RailcarPassenger.new(seats.to_i)
     end
+    puts "Создан вагон типа #{r.type} вместимостью #{r.space}"
+  rescue RuntimeError
+    puts 'Введено некорректное значение. Попробуйте снова.'
   end
 end

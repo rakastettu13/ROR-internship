@@ -2,8 +2,12 @@
 
 class Station
   include InstanceCounter
+  include Validation
 
   attr_reader :name, :train_list
+
+  validate(:type, :@name, String)
+  validate(:presence, :@name)
 
   def initialize(name)
     @name = name
@@ -38,19 +42,7 @@ class Station
     train_list.each { |train| block.call(train) }
   end
 
-  def valid?
-    validate!
-    true
-  rescue RuntimeError
-    false
-  end
-
   private
 
   attr_writer :train_list
-
-  def validate!
-    raise "Name can't be nil" if name.nil?
-    raise 'Name should be at least 1 symbol' if name.empty?
-  end
 end
